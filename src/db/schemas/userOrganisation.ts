@@ -1,11 +1,14 @@
-import { pgTable, integer, primaryKey } from "drizzle-orm/pg-core";
-import { user } from "./user";
+import { pgTable, uuid, timestamp } from "drizzle-orm/pg-core";
 import { organisation } from "./organisation";
+import { user } from "./user";
 
 export const userOrganisation = pgTable("user_organisation", {
-    userId: integer("user_id").notNull().references(() => user.id),
-    organisationId: integer("organisation_id").notNull().references(() => organisation.id),
-  }, (table) => ({
-    pk: primaryKey({ columns: [table.userId, table.organisationId] }),
-  }));
-  
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id").references(() => user.id, { onDelete: 'cascade' }),
+    organisationId: uuid("organisation_id").references(() => organisation.id, { onDelete: 'cascade' }),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type UserOrganisation = typeof userOrganisation.$inferSelect;
+export type NewUserOrganisation = typeof userOrganisation.$inferInsert;
