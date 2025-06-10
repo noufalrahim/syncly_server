@@ -8,7 +8,7 @@ export const task = pgTable("task", {
     description: text("description"),
     projectId: uuid("project_id").references(() => project.id, { onDelete: 'cascade' }),
     columnId: uuid("column_id").references(() => column.id, { onDelete: 'cascade' }).notNull(),
-    priority: text("priority").default('very_high'),
+    priority: text("priority").default('medium'),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
 });
